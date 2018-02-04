@@ -4,7 +4,9 @@ using System.Text;
 
 namespace StockArt.Domain
 {
-    class ImageSet
+    public class ImageSet
     {
+        public string Name { get; set; }
+        public int ImageCount { get; set; }
     }
 }

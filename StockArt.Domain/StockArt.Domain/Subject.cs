@@ -4,7 +4,9 @@ using System.Text;
 
 namespace StockArt.Domain
 {
-    class Subject
+    public class Subject
     {
+        public int SubjectID { get; set; }
+        public string DisplayName { get; set; }
     }
 }
