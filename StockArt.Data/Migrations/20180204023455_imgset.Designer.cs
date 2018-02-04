@@ -11,9 +11,10 @@ using System;
 namespace StockArt.Data.Migrations
 {
     [DbContext(typeof(StockArtDBContext))]
-    partial class StockArtDBContextModelSnapshot : ModelSnapshot
+    [Migration("20180204023455_imgset")]
+    partial class imgset
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
