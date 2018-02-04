@@ -18,6 +18,7 @@ namespace StockArt.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ImageSet>().HasKey(s => s.Name);
+            modelBuilder.Entity<ImageSetSubject>().HasKey(iss => new { iss.ImageSetName, iss.SubjectID });
             base.OnModelCreating(modelBuilder);
         }
 
