@@ -18,10 +18,12 @@ namespace StockArt.Migrations
             public MigrationResult()
             {
                 NewSubjects = 0;
+                NewImageSets = 0;
                 UpdatedImageSets = 0;
             }
 
             public int NewSubjects { get; internal set; }
+            public int NewImageSets { get; internal set; }
             public int UpdatedImageSets { get; internal set; }
         }
 
@@ -48,7 +50,7 @@ namespace StockArt.Migrations
             var subjectDIs = rootDI.GetDirectories();
             Announce(String.Format("{0} subject directories found.", subjectDIs.Length));
 
-            var dbSubjects = _dbContext.Subjects.Include(s => s.ImageSetSubjects).ThenInclude(iss => iss.ImageSet).ToList<Subject>();
+            var dbSubjects = _dbContext.Subjects.Include(s => s.ImageSetSubjects).ThenInclude(iss => iss.ImageSet).ToList();
             Announce(String.Format("{0} subjects found in database.", dbSubjects.ToArray<Subject>().Length));
 
             foreach(var sdi in subjectDIs)
@@ -65,10 +67,7 @@ namespace StockArt.Migrations
                 {
                     // If there's no existing subject matching the name in the directory, create one
                     // and link it to the image set found.
-                    dbSubject = new Subject
-                    {
-                        DisplayName = displayName
-                    };
+                    dbSubject = new Subject { DisplayName = displayName };
 
                     // Check for a catalog image in the yearbook directory with the canonical name
                     var catalogImagePath = Path.Combine(_settings.YearbookRoot, iSet.Name + ".jpg");
@@ -80,17 +79,42 @@ namespace StockArt.Migrations
 
                     dbSubject.ImageSetSubjects.Add(new ImageSetSubject { ImageSet = iSet, Subject = dbSubject });
                     _dbContext.Add(dbSubject);
+                    Announce(String.Format("Adding new subject {0} with a set of {1} image(s).", dbSubject.DisplayName, iSet.ImageCount));
+                    ret.NewSubjects++;
+                    ret.NewImageSets++;
                 }
                 else
                 {
-                    // If the subject already exists in the database, determine 
+                    // If the subject already exists in the database, determine if the image set is already stored.
+                    // If it's not, add it.
+                    var dbImgSet = dbSubject.ImageSetSubjects.FirstOrDefault(iss => iss.ImageSetName == iSet.Name)?.ImageSet;
+                    if(null == dbImgSet)
+                    {
+                        // If this is a new image set for an existing subject, add the image set and the relationship
+                        // to the subject to the DB.
+                        dbSubject.ImageSetSubjects.Add(new ImageSetSubject { Subject = dbSubject, ImageSet = iSet });
+                        _dbContext.Update(dbSubject);
+                        Announce(String.Format("Added set with {0} new images of {1}", iSet.ImageCount, dbSubject.DisplayName));
+                        ret.NewImageSets++;
+                    }
+                    else
+                    {
+                        // If this is an existing image set, but the ImageCount has changed, update the ImageCount in the
+                        // database.
+                        var newImageCount = iSet.ImageCount - dbImgSet.ImageCount;
+                        if(newImageCount != 0)
+                        {
+                            dbImgSet.ImageCount = iSet.ImageCount;
+                            _dbContext.Update(dbImgSet);
+                            var verb = newImageCount > 0 ? "Added" : "Removed";
+                            Announce(String.Format("{0} {1} image(s) of {2}.", verb, Math.Abs(newImageCount), dbSubject.DisplayName));
+                            ret.UpdatedImageSets++;
+                        }
+                    }
                 }
-
-
             }
-
+            _dbContext.SaveChanges();
             return ret;
-
         }
 
         protected void Announce(string msg)
