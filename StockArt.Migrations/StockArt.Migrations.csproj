@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\StockArt.Data\StockArt.Data.csproj" />
+    <ProjectReference Include="..\StockArt.Domain\StockArt.Domain\StockArt.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
