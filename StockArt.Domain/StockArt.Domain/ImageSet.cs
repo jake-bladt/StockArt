@@ -6,6 +6,6 @@ namespace StockArt.Domain
     {
         public string Name { get; set; }
         public int ImageCount { get; set; }
-        public List<ImageSetSubject> ImageSetSubjects { get; set; }
+        public List<ImageSetSubject> ImageSetSubjects { get; set; } = new List<ImageSetSubject>();
     }
 }
