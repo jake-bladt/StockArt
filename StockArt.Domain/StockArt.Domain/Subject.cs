@@ -6,6 +6,8 @@ namespace StockArt.Domain
     {
         public int SubjectID { get; set; }
         public string DisplayName { get; set; }
+        public string CatalogImageType { get; set; }
+        public string CatalogImagePath { get; set; }
         public List<ImageSetSubject> ImageSetSubjects { get; set; }
     }
 }
