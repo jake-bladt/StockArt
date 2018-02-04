@@ -51,7 +51,7 @@ namespace StockArt.Migrations
             Announce(String.Format("{0} subject directories found.", subjectDIs.Length));
 
             var dbSubjects = _dbContext.Subjects.Include(s => s.ImageSetSubjects).ThenInclude(iss => iss.ImageSet).ToList();
-            Announce(String.Format("{0} subjects found in database.", dbSubjects.ToArray<Subject>().Length));
+            Announce(String.Format("{0} subjects found in database.", _dbContext.Subjects.Count()));
 
             foreach(var sdi in subjectDIs)
             {
