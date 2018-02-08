@@ -23,6 +23,7 @@ namespace StockArtExplorer
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseStaticFiles();
             }
 
             app.UseMvcWithDefaultRoute();
