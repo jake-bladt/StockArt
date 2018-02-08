@@ -31,7 +31,7 @@ namespace StockArtExplorer.Controllers
             else
             {
                 var stream = new io.FileStream(subject.CatalogImagePath, io.FileMode.Open);
-                return File(subject.CatalogImagePath, "image/jpeg");
+                return File(stream, "image/jpeg");
             }
         }
     }
