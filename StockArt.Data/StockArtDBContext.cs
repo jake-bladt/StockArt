@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using StockArt.Domain;
 
 
@@ -20,6 +20,14 @@ namespace StockArt.Data
             modelBuilder.Entity<ImageSet>().HasKey(s => s.Name);
             modelBuilder.Entity<ImageSetSubject>().HasKey(iss => new { iss.ImageSetName, iss.SubjectID });
             base.OnModelCreating(modelBuilder);
+        }
+
+        public ImageSet CanonicalImageSet(string name)
+        {
+            return ImageSets
+                .Include(img => img.ImageSetSubjects)
+                .ThenInclude(iss => iss.Subject)
+                .FirstOrDefault(ims => ims.Name == name);
         }
 
     }

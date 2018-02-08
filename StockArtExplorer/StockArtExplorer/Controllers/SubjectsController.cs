@@ -21,10 +21,7 @@ namespace StockArtExplorer.Controllers
 
         public IActionResult Index(string id)
         {
-            var canonicalImageSet = _context.ImageSets
-                .Include(img => img.ImageSetSubjects)
-                .ThenInclude(iss => iss.Subject)
-                .FirstOrDefault(ims => ims.Name == id);
+            var canonicalImageSet = _context.CanonicalImageSet(id);
 
             // If there is no canonical set with that name, return 404.
             // If there are zero or 2+ subjects in the set, it is not a canonical set. Return 404. 
