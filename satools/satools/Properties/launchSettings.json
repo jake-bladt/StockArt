@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "satools": {
+      "commandName": "Project",
+      "commandLineArgs": "migrate"
+    }
+  }
+}
