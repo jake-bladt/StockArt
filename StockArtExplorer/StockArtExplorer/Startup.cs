@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Newtonsoft.Json.Serialization;
 
+using StockArt.Data;
+
 namespace StockArtExplorer
 {
     public class Startup
@@ -13,6 +15,7 @@ namespace StockArtExplorer
             services
              .AddMvc()
              .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+            services.AddDbContext<StockArtDBContext>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
