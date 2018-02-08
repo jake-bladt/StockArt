@@ -1,0 +1,9 @@
+﻿@model StockArt.Domain.ImageSet
+
+@{
+    var subject = Model.ImageSetSubjects.FirstOrDefault()?.Subject;
+}
+<h2>@subject.DisplayName</h2>
+<h3>
+    @Model.ImageCount images
+</h3>
